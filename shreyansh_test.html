@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sujan Web of Test — Shreyansh</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a14;
+    --paper: #f5f0e8;
+    --accent: #c0392b;
+    --gold: #d4a017;
+    --muted: #6b6460;
+    --correct: #27ae60;
+    --wrong: #e74c3c;
+    --highlight: #fff3cd;
+    --border: #2a2a2a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0;
+    border-bottom: 4px solid var(--accent);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    gap: 16px;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+
+  .brand-top {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--paper);
+    letter-spacing: -0.01em;
+  }
+
+  .brand-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: #888;
+    margin-top: 1px;
+  }
+
+  .header-meta {
+    text-align: right;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: #aaa;
+    line-height: 1.8;
+  }
+
+  .header-meta strong {
+    color: var(--gold);
+    display: block;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── TIMER BAR ── */
+  .timer-bar {
+    background: #111;
+    padding: 8px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .timer-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: #666;
+    letter-spacing: 0.2em;
+  }
+
+  #timer-display {
+    font-family: 'DM Mono', monospace;
+    font-size: 20px;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+  }
+
+  .progress-wrap {
+    flex: 1;
+    height: 3px;
+    background: #333;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  #progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--accent));
+    width: 0%;
+    transition: width 0.3s;
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── INTRO CARD ── */
+  .intro-card {
+    border: 2px solid var(--border);
+    padding: 28px 32px;
+    margin-bottom: 44px;
+    background: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .intro-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 6px;
+    background: var(--accent);
+  }
+
+  .intro-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 10px;
+    padding-left: 16px;
+  }
+
+  .meta-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding-left: 16px;
+    margin-top: 12px;
+  }
+
+  .meta-item {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .meta-item span {
+    color: var(--ink);
+    font-weight: 500;
+    display: block;
+    font-size: 14px;
+    letter-spacing: 0;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 48px 0 24px;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--paper);
+    background: var(--ink);
+    padding: 5px 14px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .section-marks {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .section-divider {
+    border: none;
+    border-top: 2px solid var(--border);
+    margin-top: 8px;
+    margin-bottom: 28px;
+  }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: white;
+    border: 1.5px solid #ddd;
+    margin-bottom: 22px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+
+  .q-card:hover {
+    border-color: var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+
+  .q-card.answered {
+    border-color: #bbb;
+  }
+
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .q-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--paper);
+    background: var(--ink);
+    padding: 3px 8px;
+    min-width: 36px;
+    text-align: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .q-text {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--ink);
+    font-weight: 400;
+  }
+
+  .q-text strong { font-weight: 600; }
+
+  /* ── MCQ OPTIONS ── */
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 14px 20px 18px;
+  }
+
+  @media (max-width: 600px) {
+    .options-grid { grid-template-columns: 1fr; }
+  }
+
+  .opt-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+    background: var(--paper);
+    border: 1.5px solid #ccc;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    color: var(--ink);
+    transition: all 0.15s;
+    line-height: 1.4;
+  }
+
+  .opt-btn:hover:not(:disabled) {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .opt-btn .opt-letter {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    min-width: 18px;
+  }
+
+  .opt-btn.selected {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .opt-btn.correct {
+    background: var(--correct);
+    color: white;
+    border-color: var(--correct);
+  }
+
+  .opt-btn.wrong {
+    background: var(--wrong);
+    color: white;
+    border-color: var(--wrong);
+  }
+
+  .opt-btn:disabled { cursor: default; }
+
+  /* ── ASSERTION-REASON ── */
+  .ar-body {
+    padding: 14px 20px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ar-stmt {
+    background: var(--paper);
+    border-left: 3px solid var(--border);
+    padding: 10px 14px;
+    font-size: 13.5px;
+  }
+
+  .ar-stmt .label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    margin-bottom: 3px;
+  }
+
+  /* ── LONG ANSWER ── */
+  .la-body {
+    padding: 14px 20px 18px;
+  }
+
+  .la-textarea {
+    width: 100%;
+    min-height: 90px;
+    border: 1.5px solid #ccc;
+    padding: 10px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13.5px;
+    color: var(--ink);
+    background: var(--paper);
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.6;
+  }
+
+  .la-textarea:focus { border-color: var(--ink); }
+
+  .la-hint {
+    margin-top: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .show-answer-btn {
+    margin-top: 10px;
+    padding: 7px 16px;
+    background: transparent;
+    border: 1.5px solid var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    color: var(--ink);
+    text-transform: uppercase;
+    transition: all 0.15s;
+  }
+
+  .show-answer-btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .answer-reveal {
+    display: none;
+    margin-top: 12px;
+    background: #f0faf4;
+    border: 1.5px solid var(--correct);
+    padding: 12px 16px;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: #1a4a2e;
+  }
+
+  .answer-reveal.visible { display: block; }
+
+  .answer-reveal .ans-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--correct);
+    letter-spacing: 0.15em;
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+
+  .math {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    background: #f5f5f5;
+    padding: 2px 6px;
+    border-radius: 2px;
+  }
+
+  /* ── SUBMIT ── */
+  .submit-section {
+    margin-top: 48px;
+    text-align: center;
+  }
+
+  #submit-btn {
+    padding: 16px 48px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: all 0.2s;
+    box-shadow: 4px 4px 0 var(--accent);
+  }
+
+  #submit-btn:hover {
+    background: var(--accent);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+
+  /* ── RESULT PANEL ── */
+  #result-panel {
+    display: none;
+    margin-top: 40px;
+    border: 2px solid var(--border);
+    background: white;
+    padding: 36px 32px;
+    text-align: center;
+    animation: fadeUp 0.4s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  #result-panel h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    margin-bottom: 6px;
+  }
+
+  .result-score {
+    font-family: 'DM Mono', monospace;
+    font-size: 56px;
+    font-weight: 500;
+    color: var(--accent);
+    line-height: 1;
+    margin: 16px 0 6px;
+  }
+
+  .result-out {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .result-grade {
+    display: inline-block;
+    padding: 6px 22px;
+    border: 2px solid var(--ink);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .result-breakdown {
+    display: flex;
+    justify-content: center;
+    gap: 36px;
+    margin: 28px 0 0;
+    flex-wrap: wrap;
+  }
+
+  .rb-item {
+    text-align: center;
+  }
+
+  .rb-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 28px;
+    font-weight: 500;
+  }
+
+  .rb-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    margin-top: 2px;
+  }
+
+  .rb-item.correct .rb-num { color: var(--correct); }
+  .rb-item.wrong .rb-num { color: var(--wrong); }
+  .rb-item.skip .rb-num { color: var(--muted); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: #666;
+    text-align: center;
+    padding: 18px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    border-top: 3px solid var(--accent);
+  }
+
+  footer strong { color: var(--gold); }
+
+  /* ── ANSWERED BADGE ── */
+  .answered-badge {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--correct);
+    text-transform: uppercase;
+    display: none;
+  }
+
+  .q-card.answered .answered-badge { display: block; }
+
+  /* ── AR OPTIONS ── */
+  .ar-options {
+    padding: 0 20px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .ar-opt-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 14px;
+    background: var(--paper);
+    border: 1.5px solid #ccc;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    transition: all 0.15s;
+    line-height: 1.45;
+  }
+
+  .ar-opt-btn:hover:not(:disabled) {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .ar-opt-btn.selected { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .ar-opt-btn.correct { background: var(--correct); color: white; border-color: var(--correct); }
+  .ar-opt-btn.wrong { background: var(--wrong); color: white; border-color: var(--wrong); }
+  .ar-opt-btn:disabled { cursor: default; }
+
+  .ar-opt-letter {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    min-width: 18px;
+    margin-top: 1px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-top">Sujan Web of Test</div>
+      <div class="brand-name">Coordinate Geometry</div>
+      <div class="brand-sub">For Shreyansh &nbsp;·&nbsp; Class X Mathematics</div>
+    </div>
+    <div class="header-meta">
+      <strong>SHREYANSH</strong>
+      <span>Total Marks: 30</span>
+      <span>Duration: 60 Minutes</span>
+      <span>Sections: A · B · C</span>
+    </div>
+  </div>
+  <div style="background:#0a0a14; border-top:1px solid #222;">
+    <div class="timer-bar">
+      <span class="timer-label">ELAPSED</span>
+      <span id="timer-display">00:00:00</span>
+      <div class="progress-wrap"><div id="progress-bar"></div></div>
+      <span class="timer-label" id="answered-count">0 / 10 MCQ answered</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="intro-card">
+    <h2>Instructions</h2>
+    <p style="padding-left:16px; color:var(--muted); font-size:13.5px; margin-top:6px;">Read each question carefully before answering. Section A &amp; B are objective. Section C requires written solutions — use the "Show Answer" button to check your work after attempting.</p>
+    <div class="meta-grid">
+      <div class="meta-item">Section A<span>10 Marks · 5 MCQ</span></div>
+      <div class="meta-item">Section B<span>5 Marks · 5 Assertion-Reason</span></div>
+      <div class="meta-item">Section C<span>15 Marks · 10 Questions</span></div>
+      <div class="meta-item">Negative Marking<span>None</span></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SECTION A ═══════════════ -->
+  <div class="section-header">
+    <div class="section-label">Section A</div>
+    <div class="section-title">Multiple Choice Questions</div>
+    <div class="section-marks">2 marks each · 10 marks total</div>
+  </div>
+  <hr class="section-divider">
+
+  <!-- Q1 -->
+  <div class="q-card" id="qcard-1">
+    <div class="answered-badge">✓ Answered</div>
+    <div class="q-header">
+      <span class="q-num">Q1</span>
+      <div class="q-text">The distance between the points <span class="math">(–7, 4)</span> and <span class="math">(5, 4)</span> is:</div>
+    </div>
+    <div class="options-grid" id="opts-1">
+      <button class="opt-btn" onclick="selectMCQ(1,'A',this)" data-correct="B"><span class="opt-letter">A)</span> 10</button>
+      <button class="opt-btn" onclick="selectMCQ(1,'B',this)" data-correct="B"><span class="opt-letter">B)</span> 12</button>
+      <button class="opt-btn" onclick="selectMCQ(1,'C',this)" data-correct="B"><span class="opt-letter">C)</span> 14</button>
+      <button class="opt-btn" onclick="selectMCQ(1,'D',this)" data-correct="B"><span class="opt-letter">D)</span> √144</button>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="q-card" id="qcard-2">
+    <div class="answered-badge">✓ Answered</div>
+    <div class="q-header">
+      <span class="q-num">Q2</span>
+      <div class="q-text">If the midpoint of the line joining <span class="math">(x, 2)</span> and <span class="math">(6, 8)</span> is <span class="math">(4, 5)</span>, then the value of <em>x</em> is:</div>
+    </div>
+    <div class="options-grid" id="opts-2">
+      <button class="opt-btn" onclick="selectMCQ(2,'A',this)" data-correct="A"><span class="opt-letter">A)</span> 2</button>
+      <button class="opt-btn" onclick="selectMCQ(2,'B',this)" data-correct="A"><span class="opt-letter">B)</span> 4</button>
+      <button class="opt-btn" onclick="selectMCQ(2,'C',this)" data-correct="A"><span class="opt-letter">C)</span> 6</button>
+      <button class="opt-btn" onclick="selectMCQ(2,'D',this)" data-correct="A"><span class="opt-letter">D)</span> 8</button>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="q-card" id="qcard-3">
+    <div class="answered-badge">✓ Answered</div>
+    <div class="q-header">
+      <span class="q-num">Q3</span>
+      <div class="q-text">The coordinates of the point dividing the line joining <span class="math">A(–4, 6)</span> and <span class="math">B(8, –6)</span> internally in the ratio <strong>3 : 1</strong> are:</div>
+    </div>
+    <div class="options-grid" id="opts-3">
+      <button class="opt-btn" onclick="selectMCQ(3,'A',this)" data-correct="B"><span class="opt-letter">A)</span> (5, –3)</button>
+      <button class="opt-btn" onclick="selectMCQ(3,'B',this)" data-correct="B"><span class="opt-letter">B)</span> (2, 0)</button>
+      <button class="opt-btn" onclick="selectMCQ(3,'C',this)" data-correct="B"><span class="opt-letter">C)</span> (6, –4)</button>
+      <button class="opt-btn" onclick="selectMCQ(3,'D',this)" data-correct="B"><span class="opt-letter">D)</span> (4, –2)</button>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="q-card" id="qcard-4">
+    <div class="answered-badge">✓ Answered</div>
+    <div class="q-header">
+      <span class="q-num">Q4</span>
+      <div class="q-text">If the distance between the points <span class="math">(3, k)</span> and <span class="math">(–1, 5)</span> is <strong>5</strong>, then the value(s) of <em>k</em> is/are:</div>
+    </div>
+    <div class="options-grid" id="opts-4">
+      <button class="opt-btn" onclick="selectMCQ(4,'A',this)" data-correct="A"><span class="opt-letter">A)</span> 2, 8</button>
+      <button class="opt-btn" onclick="selectMCQ(4,'B',this)" data-correct="A"><span class="opt-letter">B)</span> 3, 7</button>
+      <button class="opt-btn" onclick="selectMCQ(4,'C',this)" data-correct="A"><span class="opt-letter">C)</span> 1, 9</button>
+      <button class="opt-btn" onclick="selectMCQ(4,'D',this)" data-correct="A"><span class="opt-letter">D)</span> 0, 10</button>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="q-card" id="qcard-5">
+    <div class="answered-badge">✓ Answered</div>
+    <div class="q-header">
+      <span class="q-num">Q5</span>
+      <div class="q-text">Three points <span class="math">A(2, –1)</span>, <span class="math">B(5, 3)</span> and <span class="math">C(8, 7)</span>:</div>
+    </div>
+    <div class="options-grid" id="opts-5">
+      <button class="opt-btn" onclick="selectMCQ(5,'A',this)" data-correct="B"><span class="opt-letter">A)</span> Form a right triangle</button>
+      <button class="opt-btn" onclick="selectMCQ(5,'B',this)" data-correct="B"><span class="opt-letter">B)</span> Are collinear</button>
+      <button class="opt-btn" onclick="selectMCQ(5,'C',this)" data-correct="B"><span class="opt-letter">C)</span> Form an isosceles triangle</button>
+      <button class="opt-btn" onclick="selectMCQ(5,'D',this)" data-correct="B"><span class="opt-letter">D)</span> Cannot form a triangle</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SECTION B ═══════════════ -->
+  <div class="section-header">
+    <div class="section-label">Section B</div>
+    <div class="section-title">Assertion &amp; Reason</div>
+    <div class="section-marks">1 mark each · 5 marks total</div>
+  </div>
+  <div style="background: var(--paper); border:1.5px solid #ddd; padding:14px 20px; margin-bottom:24px; font-size:13px; line-height:1.7;">
+    <strong style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.15em; color:var(--muted);">KEY —</strong><br>
+    <strong>A)</strong> Both A and R are true and R explains A &nbsp;·&nbsp;
+    <strong>B)</strong> Both A and R are true but R does not explain A<br>
+    <strong>C)</strong> A is true but R is false &nbsp;·&nbsp;
+    <strong>D)</strong> A is false but R is true
+  </div>
+  <hr class="section-divider" style="margin-top:0;">
+
+  <!-- Q6 -->
+  <div class="q-card" id="qcard-6">
+    <div class="answered-badge">✓ Answered</div>
+    <div class="q-header">
+      <span class="q-num">Q6</span>
+      <div class="q-text">Assertion &amp; Reason</div>
+    </div>
+    <div class="ar-body">
+      <div class="ar-stmt"><div class="label">ASSERTION (A)</div>Points (2,3), (5,7), (8,11) lie on the same straight line.</div>
+      <div class="ar-stmt"><div class="label">REASON (R)</div>The slope between every pair of consecutive points is equal.</div>
+    </div>
+    <div class="ar-options" id="opts-6">
+      <button class="ar-opt-btn" onclick="selectMCQ(6,'A',this)" data-correct="A"><span class="ar-opt-letter">A)</span> Both A and R are true and R explains A</button>
+      <button class="ar-opt-btn" onclick="selectMCQ(6,'B',this)" data-correct="A"><span class="ar-opt-letter">B)</span> Both A and R are true but R does not explain A</button>
+      <button class="ar-opt-btn" onclick="selectMCQ(6,'C',this)" data-correct="A"><span class="ar-opt-letter">C)</span> A is true but R is false</button>
+      <button class="ar-opt-btn" onclick="selectMCQ(6,'D',this)" data-correct="A"><span class="ar-opt-letter">D)</span> A is false but R is true</button>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="q-card" id="qcard-7">
+    <div class="answered-badge">✓ Answered</div>
+    <div class="q-header">
+      <span class="q-num">Q7</span>
+      <div class="q-text">Assertion &amp; Reason</div>
+    </div>
+    <div class="ar-body">
+      <div class="ar-stmt"><div class="label">ASSERTION (A)</div>The triangle formed by (0,0), (4,0) and (0,4) is right-angled.</div>
+      <div class="ar-stmt"><div class="label">REASON (R)</div>The square of the longest side equals the sum of squares of the other two sides.</div>
+    </div>
+    <div class="ar-options" id="opts-7">
+      <button class="ar-opt-btn" onclick="selectMCQ(7,'A',this)" data-correct="A"><span class="ar-opt-letter">A)</span> Both A and R are true and R explains A</button>
+      <button class="ar-opt-btn" onclick="selectMCQ(7,'B',this)" data-correct="A"><span class="ar-opt-letter">B)</span> Both A and R are true but R does not explain A</button>
+      <button class="ar-opt-btn" onclick="selectMCQ(7,'C',this)" data-correct="A"><span class="ar-opt-letter">C)</span> A is true but R is false</button>
+      <button class="ar-opt-btn" onclick="selectMCQ(7,'D',this)" data-correct="A"><span class="ar-opt-letter">D)</span> A is false but R is true</button>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="q-card" id="qcard-8">
+    <div class="answered-badge">✓ Answered</div>
+    <div class="q-header">
+      <span class="q-num">Q8</span>
+      <div class="q-text">Assertion &amp; Reason</div>
+    </div>
+    <div class="ar-body">
+      <div class="ar-stmt"><div class="label">ASSERTION (A)</div>The midpoint of A(–6,4) and B(10,–2) is (2,1).</div>
+      <div class="ar-stmt"><div class="label">REASON (R)</div>Midpoint formula is ((x₁+x₂)/2, (y₁+y₂)/2).</div>
+    </div>
+    <div class="ar-options" id="opts-8">
+      <button class="ar-opt-btn" onclick="selectMCQ(8,'A',this)" data-correct="A"><span class="ar-opt-letter">A)</span> Both A and R are true and R explains A</button>
+      <button class="ar-opt-btn" onclick="selectMCQ(8,'B',this)" data-correct="A"><span class="ar-opt-letter">B)</span> Both A and R are true but R does not explain A</button>
+      <button class="ar-opt-btn" onclick="selectMCQ(8,'C',this)" data-correct="A"><span class="ar-opt-letter">C)</span> A is true but R is false</button>
+      <button class="ar-opt-btn" onclick="selectMCQ(8,'D',this)" data-correct="A"><span class="ar-opt-letter">D)</span> A is false but R is true</button>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="q-card" id="qcard-9">
+    <div class="answered-badge">✓ Answered</div>
+    <div class="q-header">
+      <span class="q-num">Q9</span>
+      <div class="q-text">Assertion &amp; Reason</div>
+    </div>
+    <div class="ar-body">
+      <div class="ar-stmt"><div class="label">ASSERTION (A)</div>If the distance between (a,b) and (–a,–b) is zero, then a = 0 and b = 0.</div>
+      <div class="ar-stmt"><div class="label">REASON (R)</div>Distance between two points is zero only when the points coincide.</div>
+    </div>
+    <div class="ar-options" id="opts-9">
+      <button class="ar-opt-btn" onclick="selectMCQ(9,'A',this)" data-correct="A"><span class="ar-opt-letter">A)</span> Both A and R are true and R explains A</button>
+      <button class="ar-opt-btn" onclick="selectMCQ(9,'B',this)" data-correct="A"><span class="ar-opt-letter">B)</span> Both A and R are true but R does not explain A</button>
+      <button class="ar-opt-btn" onclick="selectMCQ(9,'C',this)" data-correct="A"><span class="ar-opt-letter">C)</span> A is true but R is false</button>
+      <button class="ar-opt-btn" onclick="selectMCQ(9,'D',this)" data-correct="A"><span class="ar-opt-letter">D)</span> A is false but R is true</button>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="q-card" id="qcard-10">
+    <div class="answered-badge">✓ Answered</div>
+    <div class="q-header">
+      <span class="q-num">Q10</span>
+      <div class="q-text">Assertion &amp; Reason</div>
+    </div>
+    <div class="ar-body">
+      <div class="ar-stmt"><div class="label">ASSERTION (A)</div>If three points satisfy AB + BC = AC, then the points are collinear.</div>
+      <div class="ar-stmt"><div class="label">REASON (R)</div>In a straight line, the distance between two extreme points equals the sum of distances of intermediate segments.</div>
+    </div>
+    <div class="ar-options" id="opts-10">
+      <button class="ar-opt-btn" onclick="selectMCQ(10,'A',this)" data-correct="A"><span class="ar-opt-letter">A)</span> Both A and R are true and R explains A</button>
+      <button class="ar-opt-btn" onclick="selectMCQ(10,'B',this)" data-correct="A"><span class="ar-opt-letter">B)</span> Both A and R are true but R does not explain A</button>
+      <button class="ar-opt-btn" onclick="selectMCQ(10,'C',this)" data-correct="A"><span class="ar-opt-letter">C)</span> A is true but R is false</button>
+      <button class="ar-opt-btn" onclick="selectMCQ(10,'D',this)" data-correct="A"><span class="ar-opt-letter">D)</span> A is false but R is true</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SECTION C ═══════════════ -->
+  <div class="section-header">
+    <div class="section-label">Section C</div>
+    <div class="section-title">Short &amp; Long Answer Questions</div>
+    <div class="section-marks">1.5 marks each · 15 marks total</div>
+  </div>
+  <hr class="section-divider">
+
+  <!-- Q11 -->
+  <div class="q-card" id="qcard-11">
+    <div class="q-header">
+      <span class="q-num">Q11</span>
+      <div class="q-text">Find the distance between the points <span class="math">(–5, 7)</span> and <span class="math">(3, –1)</span>.</div>
+    </div>
+    <div class="la-body">
+      <textarea class="la-textarea" placeholder="Write your working here…"></textarea>
+      <div class="la-hint">SHOW YOUR STEPS · USE DISTANCE FORMULA</div>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">
+        <div class="ans-label">SOLUTION</div>
+        d = √[(3−(−5))² + (−1−7)²] = √[8² + (−8)²] = √[64 + 64] = √128 = <strong>8√2 ≈ 11.31 units</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="q-card" id="qcard-12">
+    <div class="q-header">
+      <span class="q-num">Q12</span>
+      <div class="q-text">Find the coordinates of the midpoint of the line joining <span class="math">(–8, 6)</span> and <span class="math">(4, –2)</span>.</div>
+    </div>
+    <div class="la-body">
+      <textarea class="la-textarea" placeholder="Write your working here…"></textarea>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">
+        <div class="ans-label">SOLUTION</div>
+        M = ((−8+4)/2, (6+(−2))/2) = (−4/2, 4/2) = <strong>(−2, 2)</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="q-card" id="qcard-13">
+    <div class="q-header">
+      <span class="q-num">Q13</span>
+      <div class="q-text">Find the coordinates of the point dividing the line joining <span class="math">A(3, –2)</span> and <span class="math">B(9, 10)</span> internally in the ratio <strong>2 : 3</strong>.</div>
+    </div>
+    <div class="la-body">
+      <textarea class="la-textarea" placeholder="Write your working here…"></textarea>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">
+        <div class="ans-label">SOLUTION</div>
+        Using section formula: x = (2×9 + 3×3)/(2+3) = (18+9)/5 = 27/5 = <strong>5.4</strong><br>
+        y = (2×10 + 3×(−2))/(2+3) = (20−6)/5 = 14/5 = <strong>2.8</strong><br>
+        Point: <strong>(27/5, 14/5)</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="q-card" id="qcard-14">
+    <div class="q-header">
+      <span class="q-num">Q14</span>
+      <div class="q-text">Find the value of <em>k</em> such that the points <span class="math">(1, 3)</span>, <span class="math">(4, k)</span> and <span class="math">(7, 9)</span> are collinear.</div>
+    </div>
+    <div class="la-body">
+      <textarea class="la-textarea" placeholder="Write your working here…"></textarea>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">
+        <div class="ans-label">SOLUTION</div>
+        Area of triangle = 0 for collinear points.<br>
+        ½|1(k−9) + 4(9−3) + 7(3−k)| = 0<br>
+        |k−9 + 24 + 21−7k| = 0 → |−6k + 36| = 0 → k = <strong>6</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="q-card" id="qcard-15">
+    <div class="q-header">
+      <span class="q-num">Q15</span>
+      <div class="q-text">Find the area of the triangle formed by the points <span class="math">(1, 2)</span>, <span class="math">(5, 6)</span> and <span class="math">(9, 2)</span>.</div>
+    </div>
+    <div class="la-body">
+      <textarea class="la-textarea" placeholder="Write your working here…"></textarea>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">
+        <div class="ans-label">SOLUTION</div>
+        Area = ½|x₁(y₂−y₃) + x₂(y₃−y₁) + x₃(y₁−y₂)|<br>
+        = ½|1(6−2) + 5(2−2) + 9(2−6)|<br>
+        = ½|4 + 0 − 36| = ½ × 32 = <strong>16 sq. units</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="q-card" id="qcard-16">
+    <div class="q-header">
+      <span class="q-num">Q16</span>
+      <div class="q-text">Find the ratio in which the point <span class="math">(3, 4)</span> divides the line joining <span class="math">(1, 2)</span> and <span class="math">(7, 10)</span>.</div>
+    </div>
+    <div class="la-body">
+      <textarea class="la-textarea" placeholder="Write your working here…"></textarea>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">
+        <div class="ans-label">SOLUTION</div>
+        Let ratio = k : 1. Then x = (7k+1)/(k+1) = 3<br>
+        7k + 1 = 3k + 3 → 4k = 2 → k = 1/2<br>
+        Ratio = 1/2 : 1 = <strong>1 : 2</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="q-card" id="qcard-17">
+    <div class="q-header">
+      <span class="q-num">Q17</span>
+      <div class="q-text">Find the coordinates of the point which divides the line joining <span class="math">A(–4, 2)</span> and <span class="math">B(8, 14)</span> <strong>externally</strong> in the ratio <strong>3 : 2</strong>.</div>
+    </div>
+    <div class="la-body">
+      <textarea class="la-textarea" placeholder="Write your working here…"></textarea>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">
+        <div class="ans-label">SOLUTION</div>
+        External section formula: x = (m·x₂ − n·x₁)/(m−n), y = (m·y₂ − n·y₁)/(m−n)<br>
+        x = (3×8 − 2×(−4))/(3−2) = (24+8)/1 = <strong>32</strong><br>
+        y = (3×14 − 2×2)/(3−2) = (42−4)/1 = <strong>38</strong><br>
+        Point: <strong>(32, 38)</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="q-card" id="qcard-18">
+    <div class="q-header">
+      <span class="q-num">Q18</span>
+      <div class="q-text">If <span class="math">A(2, 4)</span>, <span class="math">B(6, 8)</span> and <span class="math">C(x, y)</span> are vertices of a triangle with area <strong>12 square units</strong>, find a relation between <em>x</em> and <em>y</em>.</div>
+    </div>
+    <div class="la-body">
+      <textarea class="la-textarea" placeholder="Write your working here…"></textarea>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">
+        <div class="ans-label">SOLUTION</div>
+        Area = ½|x₁(y₂−y₃) + x₂(y₃−y₁) + x₃(y₁−y₂)| = 12<br>
+        |2(8−y) + 6(y−4) + x(4−8)| = 24<br>
+        |16 − 2y + 6y − 24 − 4x| = 24<br>
+        |4y − 4x − 8| = 24<br>
+        4y − 4x − 8 = ±24<br>
+        ∴ <strong>y − x = 8 or y − x = −4</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q19 -->
+  <div class="q-card" id="qcard-19">
+    <div class="q-header">
+      <span class="q-num">Q19</span>
+      <div class="q-text">Four points represent corners of a rectangular garden: <span class="math">A(–2,1)</span>, <span class="math">B(6,1)</span>, <span class="math">C(6,7)</span>, <span class="math">D(–2,7)</span>.<br>
+        <strong>(i)</strong> Find the length and breadth. &nbsp;<strong>(ii)</strong> Coordinates of diagonal intersection. &nbsp;<strong>(iii)</strong> Length of diagonal AC. &nbsp;<strong>(iv)</strong> Verify diagonals are equal.
+      </div>
+    </div>
+    <div class="la-body">
+      <textarea class="la-textarea" style="min-height:120px;" placeholder="Write your working here…"></textarea>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">
+        <div class="ans-label">SOLUTION</div>
+        <strong>(i)</strong> Length AB = |6−(−2)| = <strong>8 units</strong>; Breadth BC = |7−1| = <strong>6 units</strong><br><br>
+        <strong>(ii)</strong> Diagonals intersect at midpoint of AC or BD:<br>
+        M = ((−2+6)/2, (1+7)/2) = <strong>(2, 4)</strong><br><br>
+        <strong>(iii)</strong> AC = √[(6−(−2))² + (7−1)²] = √[64+36] = √100 = <strong>10 units</strong><br><br>
+        <strong>(iv)</strong> BD = √[(−2−6)² + (7−1)²] = √[64+36] = √100 = <strong>10 units</strong> ✓ Diagonals are equal.
+      </div>
+    </div>
+  </div>
+
+  <!-- Q20 -->
+  <div class="q-card" id="qcard-20">
+    <div class="q-header">
+      <span class="q-num">Q20</span>
+      <div class="q-text">Three observation towers at <span class="math">A(–4,2)</span>, <span class="math">B(6,2)</span>, <span class="math">C(2,10)</span>. Control station P(x,y) is equidistant from A and B.<br>
+        <strong>(i)</strong> Find the equation satisfied by P. &nbsp;<strong>(ii)</strong> If P lies on line AC, find P. &nbsp;<strong>(iii)</strong> Find distance of P from C.
+      </div>
+    </div>
+    <div class="la-body">
+      <textarea class="la-textarea" style="min-height:130px;" placeholder="Write your working here…"></textarea>
+      <button class="show-answer-btn" onclick="toggleAnswer(this)">Show Answer</button>
+      <div class="answer-reveal">
+        <div class="ans-label">SOLUTION</div>
+        <strong>(i)</strong> PA = PB ⟹ PA² = PB²<br>
+        (x+4)²+(y−2)² = (x−6)²+(y−2)²<br>
+        x²+8x+16 = x²−12x+36 → 20x = 20 → <strong>x = 1</strong><br>
+        Equation: <strong>x = 1</strong> (the perpendicular bisector of AB)<br><br>
+        <strong>(ii)</strong> Line AC: slope = (10−2)/(2−(−4)) = 8/6 = 4/3<br>
+        Equation: y−2 = (4/3)(x+4) → y = (4/3)x + 22/3<br>
+        Substitute x=1: y = 4/3 + 22/3 = 26/3<br>
+        P = <strong>(1, 26/3)</strong><br><br>
+        <strong>(iii)</strong> PC = √[(2−1)² + (10−26/3)²] = √[1 + (4/3)²] = √[1 + 16/9] = √(25/9) = <strong>5/3 units</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-section">
+    <button id="submit-btn" onclick="submitTest()">Submit &amp; Check Score</button>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result-panel">
+    <h2>Test Complete</h2>
+    <div style="font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); letter-spacing:0.15em; margin-top:4px;">SUJAN WEB OF TEST · SHREYANSH</div>
+    <div class="result-score" id="res-score">—</div>
+    <div class="result-out" id="res-out">out of 15 MCQ marks</div>
+    <div class="result-grade" id="res-grade">—</div>
+    <div class="result-breakdown">
+      <div class="rb-item correct"><div class="rb-num" id="rb-correct">0</div><div class="rb-label">CORRECT</div></div>
+      <div class="rb-item wrong"><div class="rb-num" id="rb-wrong">0</div><div class="rb-label">WRONG</div></div>
+      <div class="rb-item skip"><div class="rb-num" id="rb-skip">0</div><div class="rb-label">SKIPPED</div></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <strong>SUJAN WEB OF TEST</strong> &nbsp;·&nbsp; Prepared for Shreyansh &nbsp;·&nbsp; Coordinate Geometry · Class X
+</footer>
+
+<script>
+  // ── Timer ──
+  let startTime = Date.now();
+  const TOTAL_SECS = 3600;
+  setInterval(() => {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const h = String(Math.floor(elapsed/3600)).padStart(2,'0');
+    const m = String(Math.floor((elapsed%3600)/60)).padStart(2,'0');
+    const s = String(elapsed%60).padStart(2,'0');
+    document.getElementById('timer-display').textContent = `${h}:${m}:${s}`;
+    const pct = Math.min((elapsed / TOTAL_SECS) * 100, 100);
+    document.getElementById('progress-bar').style.width = pct + '%';
+  }, 1000);
+
+  // ── MCQ State ──
+  const answers = {};
+  const correctAnswers = {
+    1:'B', 2:'A', 3:'B', 4:'A', 5:'B',
+    6:'A', 7:'A', 8:'A', 9:'A', 10:'A'
+  };
+
+  function selectMCQ(qNum, letter, btn) {
+    if (answers[qNum]) return; // already answered
+    answers[qNum] = letter;
+
+    const container = document.getElementById('opts-' + qNum);
+    const buttons = container.querySelectorAll('.opt-btn, .ar-opt-btn');
+    const correct = correctAnswers[qNum];
+
+    buttons.forEach(b => {
+      b.disabled = true;
+      const bLetter = b.querySelector('.opt-letter, .ar-opt-letter').textContent.replace(')','').trim();
+      if (bLetter === correct) b.classList.add('correct');
+      else if (bLetter === letter && letter !== correct) b.classList.add('wrong');
+    });
+
+    document.getElementById('qcard-' + qNum).classList.add('answered');
+    updateCount();
+  }
+
+  function updateCount() {
+    const n = Object.keys(answers).length;
+    document.getElementById('answered-count').textContent = `${n} / 10 MCQ answered`;
+  }
+
+  function toggleAnswer(btn) {
+    const reveal = btn.nextElementSibling;
+    const isOpen = reveal.classList.contains('visible');
+    reveal.classList.toggle('visible', !isOpen);
+    btn.textContent = isOpen ? 'Show Answer' : 'Hide Answer';
+  }
+
+  function submitTest() {
+    let correct = 0, wrong = 0, skip = 0;
+    for (let i = 1; i <= 10; i++) {
+      if (!answers[i]) { skip++; }
+      else if (answers[i] === correctAnswers[i]) { correct++; }
+      else { wrong++; }
+    }
+    const score = correct * 1.5; // 15 marks for 10 MCQ (Section A: 2 each, B: 1 each)
+    // Section A: Q1-5 worth 2 marks each, Section B: Q6-10 worth 1 mark each
+    let secA = 0, secB = 0;
+    for (let i=1;i<=5;i++) if(answers[i]===correctAnswers[i]) secA+=2;
+    for (let i=6;i<=10;i++) if(answers[i]===correctAnswers[i]) secB+=1;
+    const totalMCQ = secA + secB;
+
+    document.getElementById('res-score').textContent = totalMCQ;
+    document.getElementById('res-out').textContent = 'out of 15 objective marks';
+    document.getElementById('rb-correct').textContent = correct;
+    document.getElementById('rb-wrong').textContent = wrong;
+    document.getElementById('rb-skip').textContent = skip;
+
+    let grade = 'Needs Practice';
+    if (totalMCQ >= 13) grade = 'Excellent ★';
+    else if (totalMCQ >= 10) grade = 'Good Work ✓';
+    else if (totalMCQ >= 7) grade = 'Average';
+    document.getElementById('res-grade').textContent = grade;
+
+    const panel = document.getElementById('result-panel');
+    panel.style.display = 'block';
+    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('submit-btn').disabled = true;
+    document.getElementById('submit-btn').style.opacity = '0.5';
+  }
+</script>
+</body>
+</html>
